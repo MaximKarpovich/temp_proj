@@ -23,8 +23,6 @@ namespace Platform {
         virtual double Time () const = 0; // current time in seconds
         virtual double Duration () const = 0; // duration in seconds
         virtual void Seek (double seconds) = 0; // set current time in seconds
-
-        virtual void set_items(JNIEnv *env, jobject player_object, jmethodID player_method) = 0;
     };
 
     typedef std::shared_ptr<AbstractVideoPlayer> VideoPlayerPtr;

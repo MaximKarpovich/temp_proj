@@ -7,10 +7,12 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 #link_directories(${CMAKE_SOURCE_DIR}/libs/armeabi-v7a)
 
 add_library(hello-cpp SHARED
-            jni.cpp
+            ndkvideoplayer.cpp
             #emp.cpp
             VideoPlayer.cpp
             VideoPlayer.h
+            helpers/EnvHolder.cpp
+            helpers/EnvHolder.h
             )
 
 #target_include_directories(hello-cpp PRIVATE

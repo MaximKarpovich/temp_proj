@@ -19,8 +19,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import ffmpeg.main.ffmpeg_sample.player.SphericalVideoPlayer;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,11 +31,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private static final int PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 0x1;
 
-    private SphericalVideoPlayer videoPlayer;
     private ConstraintLayout layout;
     TextView text_view;
     private static final int REQUEST_WRITE_PERMISSION = 786;
 
+    static {
+        System.loadLibrary("hello-cpp");
+    }
+
+    public native void initVideoPlayer();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,14 +49,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Button button = (Button) findViewById(R.id.button);
         button.setOnClickListener(this);
 
-        videoPlayer = new SphericalVideoPlayer(this);
-        videoPlayer.setVideoURIPath(SAMPLE_VIDEO_PATH);
-        videoPlayer.playWhenReady();
 
-        layout = (ConstraintLayout) findViewById(R.id.main_layout);
-        layout.addView(videoPlayer);
-        layout.removeView(button);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        //getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         requestExternalStoragePermission();
 
         //text_view = (TextView) findViewById(R.id.editText);
@@ -91,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void init() {
-        videoPlayer.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
+        /*videoPlayer.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
             @Override
             public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
                 videoPlayer.initRenderThread(surface, width, height);
@@ -111,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onSurfaceTextureUpdated(SurfaceTexture surface) {
             }
         });
-        videoPlayer.setVisibility(View.VISIBLE);
+        videoPlayer.setVisibility(View.VISIBLE);*/
     }
 
     @Override
@@ -148,9 +144,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         //String file_path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Download/man_sale.mpeg";
-        videoPlayer.pause();
+        //videoPlayer.pause();
 
        /// Log.d("Debug", " PATH = " + file_path);
        // text_view.setText(sayHello(file_path));
+        initVideoPlayer();
     }
 }
