@@ -15,13 +15,19 @@
 
 package ffmpeg.main.ffmpeg_sample.player;
 
+import ffmpeg.main.ffmpeg_sample.MainActivity;
+import ffmpeg.main.ffmpeg_sample.R;
+
 import android.graphics.SurfaceTexture;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 
+import android.net.Uri;
 import android.util.Log;
 
 import android.view.Surface;
+
+import java.io.IOException;
 
 
 public class NativeVideoPlayer {
@@ -29,41 +35,55 @@ public class NativeVideoPlayer {
     //private RenderThread renderThread;
     private SurfaceTexture surfaceTexture;
 
+    private final String SAMPLE_VIDEO_PATH = "android.resource://com.oculus.sample/raw/" + R.raw.sample360;
+
     private boolean readyToPlay;
 
     private boolean frameAvailable;
 
     public NativeVideoPlayer() {
+
         Log.d("NativeVideoPlayer", "Created");
+        Load(SAMPLE_VIDEO_PATH);
     }
 
-    public void Load (String videoPath) {
+    public boolean Load (String videoPath) {
+        Log.d("NativeVideoPlayer", videoPath);
+
         videoPlayerInternal = new MediaPlayer();
         videoPlayerInternal.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
         // TODO: make sure it first looks in absolute path and if not found,
         // loads from bundle (apk)
-        //videoPlayerInternal.setDataSource (getContext(), Uri.parse(videoPath), null);
+        try {
+            videoPlayerInternal.setDataSource("/storage/emulated/0/Download/test.mp4");
+        }
+        catch (IOException ex)
+        {
+            Log.d("NativeVideoPlayer", ex.getMessage());
+        }
 
         videoPlayerInternal.setLooping(true);
+        videoPlayerInternal.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                Log.d("NativeVideoPlayer", "Start");
+                mp.start();
+            }
+        });
+
         videoPlayerInternal.prepareAsync();
+
+        return true;
     }
 
     public void Play () {
-        if (!readyToPlay) {
-            return;
-        }
-
         if (!videoPlayerInternal.isPlaying()) {
             videoPlayerInternal.start();
         }
     }
 
     public void Stop () {
-        if (!readyToPlay) {
-            return;
-        }
-
         if (videoPlayerInternal.isPlaying()) {
             videoPlayerInternal.stop();
         }
@@ -88,11 +108,11 @@ public class NativeVideoPlayer {
     }
 
     public double Duration () {
-        return 0;
+        return videoPlayerInternal.getDuration();
     }
 
     public void Seek (double seconds) {
-
+        Log.d("NativeVideoPlayer", "Duration" + Double.toString(seconds));
     }
         
     public int Width () {
@@ -131,5 +151,10 @@ public class NativeVideoPlayer {
         surfaceTexture.updateTexImage();
 
         frameAvailable = false;
+    }
+
+    private void OnPlayerPrepared()
+    {
+
     }
 }

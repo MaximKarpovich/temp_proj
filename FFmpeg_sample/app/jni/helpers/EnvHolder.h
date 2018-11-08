@@ -17,17 +17,12 @@ namespace Jni {
          * @param environment A JNI environment to hold.
          */
         EnvHolder(JNIEnv *environment) {
-            __android_log_print(ANDROID_LOG_INFO, "JNI", "env holder 1");
             mOldEnvironment = mEnvironment;
-            __android_log_print(ANDROID_LOG_INFO, "JNI", "env holder 2");
             mEnvironment = environment;
-            __android_log_print(ANDROID_LOG_INFO, "JNI", "env holder 3");
         }
 
         ~EnvHolder() {
-            __android_log_print(ANDROID_LOG_INFO, "JNI", "env holder 4");
             mEnvironment = mOldEnvironment;
-            __android_log_print(ANDROID_LOG_INFO, "JNI", "env holder 5");
         }
 
         /**
